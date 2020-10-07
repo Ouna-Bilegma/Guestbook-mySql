@@ -1,0 +1,2 @@
+<span class="date-mess">oyuna 29.09.2020 10:03 мск </span><br> <span class='message'>hello</span>
+<span class="date-mess">oyuna 2020-09-29T11:28:45Europe/Berlin000000 </span><br> <span class='message'>how are you?</span>
