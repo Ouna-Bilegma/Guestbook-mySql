@@ -1,14 +1,19 @@
-<h1> challenge-php-guestbook </h1>
+Title: Learning about databases
 
-    Repository: challenge-php-guestbook
-    Type of Challenge: Consolidation Challenge
-    Duration: 1 day
-    Deployment strategy : heroku
+    Repository: php-guestbook-mysql
+    Type of Challenge: Learning challenge
+    Duration: 2 days
+    Deployment strategy : NA
     Team challenge : solo
-<h1> The mission </h1>
-It is time for our first PHP consolidation challenge!
-Let's make a guestbook in PHP.
-Every visitor of your page can leave a message that is then saved. Messages are then showed (last message on top) for everybody who visits the page.
 
-Make sure to deploy the site before 17:00 o'clock on Heroku and publish the URL on our usual exercises spreadsheet!
-<h2> Deployment methode - Heroku </h2>
+Learning objectives
+
+    Create a database
+    Connect a PHP application to a database
+    Store data in a database
+    Make queries safely
+
+The Mission
+
+We've touched the basics of PHP, and now it's time to learn about its partner in crime, let's look at MySQL/MariaDB and what it does / how it works.
+After some theory from your coach, you will dive in and do a small exercise to discover your new super powers!.
