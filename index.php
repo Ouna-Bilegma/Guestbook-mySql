@@ -139,16 +139,22 @@ include 'book.php';
 <body>
     <?php require 'header.php'; ?>
     <div class="container">
-        <?foreach($gb as $text) {
-		?><?= ($text) ?><br><br>
-        <?
-	}
 
-	?>
-        <form action="<?= $_SERVER['SCRIPT_NAME'] ?>" method="POST" id="form"><input type="text" name="name"
-                placeholder="Name" id="name"><textarea name="text" placeholder="Text"></textarea><br><input
-                type="submit" name="add" value="Add your note 😀"></form>
+        <form action="<?= $_SERVER['SCRIPT_NAME'] ?>" method="POST" id="form">
+            <input type="text" name="name" placeholder="Name" id="name">
+            <input type="text" name="title" placeholder="Title" id="title">
+            <textarea name="message" placeholder="Text"></textarea>
+            <br>
+            <input type="submit" name="add" value="Add your note 😀">
+        </form>
     </div>
+    <?php foreach ($listMessages as $message) { ?>
+    <p style=color:#fff>Title: <?php echo $message['title']; ?></p>
+    <p style=color:#fff>Name: <?php echo $message['name']; ?></p>
+    <p style=color:#fff>Message: <?php echo $message['message']; ?></p>
+    <p style=color:#fff>date: <?php echo $message['postdate']; ?></p>
+    <br><br>
+    <?php    }    ?>
     <?php require 'footer.php'; ?>
     <script>
     var i2 = document.querySelector('#name');

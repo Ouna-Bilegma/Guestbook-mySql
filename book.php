@@ -1,82 +1,100 @@
 <?php
-$file = "book.txt"; //create text document to save all messages
-$data = date('Y-m-d H:i:s'); //date format
-$text = $_REQUEST['text']; //global variable
-$name = $_REQUEST['name'];
-if (@$_REQUEST['add']) {
-  $f = fopen($file, "a"); //function that opens af file
-  if (@$_REQUEST['text'] && @$_REQUEST['name']) fputs($f, '<span class="date-mess">' . $name . ' ' . $data . " </span><br>" . " <span class='message'>" . $text . "</span>" . "\n");
-  fclose($f); //open and close file .txt
-  $random = time();    // random parameter to not cache everything
-  Header("Location: http://{$_SERVER['SERVER_NAME']}{$_SERVER['SCRIPT_NAME']}?$random#form");
-  exit();
+
+
+
+
+if (isset($_POST['add'])) {
+    $data = date('Y-m-d H:i:s'); //date format
+    $message = $_POST['message']; //global variable
+    $name = $_POST['name'];
+    $title = $_POST['title'];
+    saveMessages($name, $title, $message, $data);
 }
-$gb = @file($file);
-if (!$gb) $gb = [];
 
 
 //db
-public static function openConnection(): PDO
-    {
-        $dbHost = "localhost";
-        $dbUser = "test";
-        $dbPass = "";
-        $db     = "test";
+function openConnection(): PDO
+{
+    $dbHost = "localhost";
+    $dbUser = "root";
+    $dbPass = "";
+    $db     = "test";
 
-        $driverOptions = [
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'",
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        ];
+    $driverOptions = [
+        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'",
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ];
 
-        $pdo = new PDO('mysql:host=' . $dbHost . ';dbname=' . $db, $dbUser, $dbPass, $driverOptions);
+    $pdo = new PDO('mysql:host=' . $dbHost . ';dbname=' . $db, $dbUser, $dbPass, $driverOptions);
 
-        return $pdo;
+    return $pdo;
+}
+
+function listMessages(): array
+{
+    $rows = [];
+    try {
+        $pdo    = openConnection();
+        $sql    = "SELECT ID, name, title, message, postdate FROM test";
+        $handle = $pdo->prepare($sql);
+        $handle->execute();
+        $rows = $handle->fetchAll();
+    } catch (Exception $e) {
+        echo 'Caught exception: ', $e->getMessage(), "\n";
     }
 
-    public static function list(): array
-    {
-        $rows = [];
-        try {
-            $pdo    = self::openConnection();
-            $sql    = "SELECT ID, name, , title, message, postdate FROM test";
-            $handle = $pdo->prepare($sql);
-            $handle->execute();
-            $rows = $handle->fetchAll();
-        } catch (Exception $e) {
-            echo 'Caught exception: ', $e->getMessage(), "\n";
-        }
+    return $rows;
+}
 
-        return $rows;
-    }
-
-    public static function get($id): array
-    {
-        $rows = [];
-        try {
-            $pdo    = self::openConnection();
-            $sql    = 'SELECT ID, name, , title, message, postdate FROM test WHERE ID = :id';
-            $handle = $pdo->prepare($sql);
-            $handle->bindValue(':id', $id);
-            $handle->execute();
-            $rows = $handle->fetchAll();
-        } catch (Exception $e) {
-            echo 'Caught exception: ', $e->getMessage(), "\n";
-        }
-
-        return $rows;
-    }
-
-    public static function delete($id): void
-    {
-        try {
-            $pdo    = self::openConnection();
-            $sql    = 'DELETE FROM guestbook WHERE ID = :id';
-            $handle = $pdo->prepare($sql);
-            $handle->bindValue(':id', $id);
-            $handle->execute();
-        } catch (Exception $e) {
-            echo 'Caught exception: ', $e->getMessage(), "\n";
-        }
+function saveMessages($name, $title, $message, $datepost): void
+{
+    try {
+        $pdo = openConnection();
+        // if ($guestbookItem->getID() === '') {
+        $sql    = 'INSERT INTO test (name, title, message, postdate) VALUES (:name,  :title, :message, :datepost)';
+        $handle = $pdo->prepare($sql);
+        // } else {
+        //     $sql    = 'UPDATE guestbook SET name_first = :name_first, name_last = :name_last, title = :title, message = :message, date_post = :date_post WHERE ID = :id';
+        //     $handle = $pdo->prepare($sql);
+        //     $handle->bindValue(':id', $guestbookItem->getID());
+        // }
+        $handle->bindValue(':name', $name);
+        $handle->bindValue(':title', $title);
+        $handle->bindValue(':message', $message);
+        $handle->bindValue(':datepost', $datepost);
+        $handle->execute();
+    } catch (Exception $e) {
+        echo 'Caught exception: ', $e->getMessage(), "\n";
     }
 }
+// function get($id): array
+// {
+//     $rows = [];
+//     try {
+//         $pdo    = self::openConnection();
+//         $sql    = 'SELECT ID, name, , title, message, postdate FROM test WHERE ID = :id';
+//         $handle = $pdo->prepare($sql);
+//         $handle->bindValue(':id', $id);
+//         $handle->execute();
+//         $rows = $handle->fetchAll();
+//     } catch (Exception $e) {
+//         echo 'Caught exception: ', $e->getMessage(), "\n";
+//     }
+
+//     return $rows;
+// }
+
+// function delete($id): void
+// {
+//     try {
+//         $pdo    = self::openConnection();
+//         $sql    = 'DELETE FROM guestbook WHERE ID = :id';
+//         $handle = $pdo->prepare($sql);
+//         $handle->bindValue(':id', $id);
+//         $handle->execute();
+//     } catch (Exception $e) {
+//         echo 'Caught exception: ', $e->getMessage(), "\n";
+//     }
+// }
+$listMessages = listMessages();
